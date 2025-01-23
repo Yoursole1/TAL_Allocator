@@ -15,11 +15,17 @@ int main(){
     );
 
     init_heap();
-    void* test = malloc(8);
 
-    if(test == NULL){
-        printf("Uh oh, heap didn't do the thing");
-    }
+    printf("%p\n", heap_start);
+
+    void* test = malloc(1);
+
+    // void* test_2 = malloc(1);
+    
+    printf("%p\n", test);
+    printf("%p\n", heap);
+
+
 
 
     return 0;

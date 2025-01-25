@@ -30,7 +30,7 @@ void printHeap(){ // todo remove
 
     while(curr != NULL){
 
-        printf("%p (%i) -> ", curr->block, curr->free);
+        printf("%p (Free: %i, Size: %i) -> ", curr->block, curr->free, curr->size);
         
         curr = curr->next;
     }

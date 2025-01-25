@@ -36,6 +36,19 @@ int main(){
     void* test_5 = alloc(2);
 
     printHeap();
+
+    free(test_5);
+
+    printHeap();
+
+    free(test_3);
+
+    printHeap();
+
+    free(test_4);
+
+    printHeap();
+
     
     for(void* i = heap_start; i < heap_start + 10; i++){
         printf("%i\n", isFree(i));

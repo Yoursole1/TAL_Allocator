@@ -5,6 +5,7 @@
 
 
 int main(){
+    
     heap_start = mmap(
         NULL,
         HEAP_SIZE,
@@ -16,14 +17,29 @@ int main(){
 
     init_heap();
 
-    printf("%p\n", heap_start);
+    // printf("%p\n", heap_start);
 
-    void* test = malloc(1);
+    void* test = alloc(2);
+    void* test_2 = alloc(1);
+    void* test_3 = alloc(2);
+    printHeap();
 
-    // void* test_2 = malloc(1);
+    free(test);
+    free(test_2);
     
-    printf("%p\n", test);
-    printf("%p\n", heap);
+    printHeap();
+
+    void* test_4 = alloc(1);
+
+    printHeap();
+
+    void* test_5 = alloc(2);
+
+    printHeap();
+    
+    for(void* i = heap_start; i < heap_start + 10; i++){
+        printf("%i\n", isFree(i));
+    }
 
 
 

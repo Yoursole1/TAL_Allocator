@@ -3,6 +3,29 @@
 
 #include <stdio.h>
 
+void printHeap(){ // todo remove
+    printf("--------------------\n");
+    printf("Base Address: %p\n", heap_start);
+    printf("Heap Used: %i\n", HEAP_SIZE - heap_remaining);
+    struct Block* curr = &links[0];
+
+    while(curr != NULL){
+
+        printf("%p (Free: %i, Size: %i) -> ", curr->block, curr->free, curr->size);
+        
+        curr = curr->next;
+    }
+
+    printf("NULL\n");
+
+    printf("[");
+    for(int i = 0; i < 10; i++){
+        printf("%i, ", free_indecies[i]);
+    }
+    printf("]\n");
+
+    printf("--------------------\n");
+}
 
 int main(){
     

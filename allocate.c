@@ -1,7 +1,6 @@
 #include "stdint.h"
 #include "stdbool.h"
 #include <stddef.h>
-#include <stdio.h>
 
 #define HEAP_SIZE 1024
 
@@ -47,6 +46,9 @@ void init_heap(){
 
 bool isFree(void* mem)
 {
+    if(free_indecies[0] == 0){
+        init_heap();
+    }
     struct Block* curr = &links[0];
 
     while(curr != NULL){
@@ -65,7 +67,10 @@ bool isFree(void* mem)
 }
 
 void* alloc(uint32_t size)
-{
+{   
+    if(free_indecies[0] == 0){
+        init_heap();
+    }
     
     if(size > heap_remaining){
         return NULL;

@@ -38,8 +38,6 @@ int main(){
         0
     );
 
-    init_heap();
-
     // printf("%p\n", heap_start);
 
     void* test = alloc(2);

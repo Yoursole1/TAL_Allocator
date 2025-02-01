@@ -1,13 +1,13 @@
 #include <sys/mman.h>
-#include "coolalloc.c" // gotta expose the impl here so that we can write to heap_start.
 
 #include <stdio.h>
+#include "general_allocate.c"
 
 
 
 int main(){
     
-    heap_start = mmap(
+    void* heap_start = mmap(
         NULL,
         HEAP_SIZE,
         PROT_READ | PROT_WRITE,
@@ -16,11 +16,22 @@ int main(){
         0
     );
 
-    // printf("%p\n", heap_start);
+    
+    struct General_Allocator allocator = build_general_allocator(heap_start);
+    
+    void* mem = allocator.super.alloc(&allocator, 1);
 
-    void* test = alloc(2);
+    printf("%i\n", allocator.super.isFree(&allocator, mem));
+    printf("%i\n", allocator.super.isFree(&allocator, mem + 10));
 
-    printf("%i", int_log(9));
+    allocator.super.free(&allocator, mem);
+
+    printf("%i\n", allocator.super.isFree(&allocator, mem));
+    printf("%i\n", allocator.super.isFree(&allocator, mem + 10));
+    
+    printf("%p\n", heap_start);
+    printf("%p\n", mem);
+
 
 
     return 0;

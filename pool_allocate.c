@@ -35,12 +35,12 @@ void init_heap()
     
 }
 
-bool isFree(void* mem)
+bool isFree(void* self, void* mem)
 {
     return false;
 }
 
-void* alloc(uint32_t size)
+void* alloc(void* self, uint32_t size)
 {   
     // if not init, init_heap()
 
@@ -48,7 +48,7 @@ void* alloc(uint32_t size)
 }
 
 
-void free(void* mem)
+void free(void* self, void* mem)
 {
     
 }

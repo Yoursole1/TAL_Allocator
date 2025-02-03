@@ -2,8 +2,9 @@
 #include "stdbool.h"
 #include <stddef.h>
 
-#include "alloc.c"
+#include "alloc.h"
 
+#pragma once
 
 
 #define HEAP_SIZE 1024 // since we are allocating arrays of this size, it must be determined at compile time like this
@@ -182,16 +183,17 @@ void free(void* self, void* mem)
 struct Block links[HEAP_SIZE];
 uint8_t free_indecies[HEAP_SIZE];
 
+// WARNING: Since links and free_indecies are global, I am 90% sure this method should only be called once
 struct General_Allocator build_general_allocator(void* heap_start)
 {
     
     struct Allocator super = {
-        HEAP_SIZE,
-        heap_start,
+        .heap_size = HEAP_SIZE,
+        .heap_start = heap_start,
 
-        &isFree,
-        &alloc,
-        &free
+        .isFree = &isFree,
+        .alloc = &alloc,
+        .free = &free
     };
     
     links[0] = (struct Block){

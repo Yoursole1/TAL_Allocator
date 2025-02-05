@@ -49,16 +49,23 @@ typedef struct {
 
 block_t* pool_heads[EXP - 3];
 
-block_t* build_pool(void* start, uint32_t pool_size, uint32_t pool_count)
+block_t* build_pool(void* curr, uint32_t pool_size, uint32_t pool_count, uint32_t i)
 {      
-    if(pool_count <= 0){
-        return &(block_t){NULL};
+    block_t* s = (block_t*)curr;
+
+    if(i >= pool_count - 1){
+        block_t n = {NULL};
+        *s = n;
+        return s;
     }
 
-    return &(block_t)
+    block_t t = (block_t)
     {
-        build_pool(start + pool_size, pool_size, pool_count - 1)
+        build_pool((uint8_t*)curr + pool_size, pool_size, pool_count, i + 1)
     };
+    *s = t;
+
+    return s;
 }
 
 void* init_heap()
@@ -74,10 +81,10 @@ void* init_heap()
     }
 
     void* start = heap_start;
-
+    
     for(int i = 0; i < EXP - 3; i++){
         // build linked list for each pool
-        pool_heads[i] = build_pool(start, pool_size[i], pool_counts[i]);
+        pool_heads[i] = build_pool(start, pool_size[i], pool_counts[i], 0);
 
         start += pool_size[i] * pool_counts[i]; // block size (bytes) * amount of blocks
     }

@@ -163,7 +163,7 @@ void* alloc(void* self, uint32_t size)
 {   
     // find ideal i
     uint32_t i = 0;
-    for(; size > pool_size[i]; i++);
+    for(; size > pool_size[i] && i < EXP - 3; i++);
     
     // if the pool for ideal i is already full (null head), keep going to next block until we find a free one
     block_t* block = pool_heads[i];

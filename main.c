@@ -17,14 +17,26 @@ int main(){
     );
 
     printf("heap start: %p\n", heap_start);
-    
+
     init_heap();
 
+    uint16_t* mem = alloc(NULL, 8);
+    printf("------------------------%i\n", isFree(NULL, mem));
 
-    block_t* head = pool_heads[4];
+    block_t* head = pool_heads[0];
 
     while(head != NULL){
-        printf("%p\n", head);
+        printf("%i\n", get_index(head));
+        head = head->next_block;
+    }
+
+    free(NULL, mem);
+    printf("------------------------%i\n", isFree(NULL, mem));
+
+    head = pool_heads[0];
+
+    while(head != NULL){
+        printf("%i\n", get_index(head));
         head = head->next_block;
     }
 

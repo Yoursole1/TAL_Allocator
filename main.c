@@ -20,26 +20,15 @@ int main(){
 
     init_heap();
 
-    uint16_t* mem = alloc(NULL, 17);
-    printf("------------------------%i\n", isFree(NULL, mem));
+    void* mem[32];
 
-    block_t* head = pool_heads[0];
-
-    while(head != NULL){
-        printf("%i\n", get_index(head));
-        head = head->next_block;
+    for(int i = 0; i < 32; i++){
+        mem[i] = alloc(NULL, 8);
     }
 
-    free(NULL, mem);
-    printf("------------------------%i\n", isFree(NULL, mem));
-
-    head = pool_heads[0];
-
-    while(head != NULL){
-        printf("%i\n", get_index(head));
-        head = head->next_block;
+    for(int i = 0; i < 32; i++){
+        printf("Pool (%i): %i\n", i, get_pool(mem[i]));
     }
-
 
 
     return 0;

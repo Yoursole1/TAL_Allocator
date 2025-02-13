@@ -44,11 +44,11 @@ static const uint32_t pool_size[EXP - 3]    = {16, 32, 64, 128, 256};
 uint8_t is_free[IS_FREE_SIZE]; // if this param can be generated somehow I would loveee that 
 
 
-typedef struct {
+struct block_t{
     struct block_t* next_block;
-} block_t;
+};
 
-block_t* pool_heads[EXP - 3];
+struct block_t* pool_heads[EXP - 3];
 
 // get the index of a block in the is_free list
 uint32_t get_index(void* block){
@@ -108,17 +108,17 @@ uint32_t get_pool(void* block){
     return i;
 }
 
-block_t* build_pool(void* curr, uint32_t pool_size, uint32_t pool_count, uint32_t i)
+struct block_t* build_pool(void* curr, uint32_t pool_size, uint32_t pool_count, uint32_t i)
 {      
-    block_t* s = (block_t*)curr;
+    struct block_t* s = (struct block_t*)curr;
 
     if(i >= pool_count - 1){
-        block_t n = {NULL};
+        struct block_t n = {NULL};
         *s = n;
         return s;
     }
 
-    block_t t = (block_t)
+    struct block_t t = (struct block_t)
     {
         build_pool((uint8_t*)curr + pool_size, pool_size, pool_count, i + 1)
     };
@@ -160,6 +160,9 @@ void* init_heap()
 bool isFree(void* self, void* mem)
 {
     uint32_t index = get_index(mem);
+    if(index == -1){
+        return false;
+    }
     uint32_t big_index = index / 8;
     uint32_t small_index = index % 8;
 
@@ -173,7 +176,7 @@ void* alloc(void* self, uint32_t size)
     for(; size > pool_size[i] && i < EXP - 3; i++);
     
     // if the pool for ideal i is already full (null head), keep going to next block until we find a free one
-    block_t* block = pool_heads[i];
+    struct block_t* block = pool_heads[i];
     while(block == NULL && i < EXP - 3){
         i++;
         block = pool_heads[i];
@@ -201,15 +204,18 @@ void free(void* self, void* mem)
 {
     uint32_t i = get_pool(mem);
 
-    block_t new_head = (block_t){
+    struct block_t new_head = (struct block_t){
         pool_heads[i]
     };
 
-    *((block_t*)mem) = new_head;
+    *((struct block_t*)mem) = new_head;
 
-    pool_heads[i] = (block_t*)mem;
+    pool_heads[i] = (struct block_t*)mem;
 
     uint32_t index = get_index(mem);
+    if(index == -1){
+        return; // bad call, already "free" since its not in heap
+    }
     uint32_t big_index = index / 8;
     uint32_t small_index = index % 8;
 

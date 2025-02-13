@@ -50,10 +50,6 @@ typedef struct {
 
 block_t* pool_heads[EXP - 3];
 
-// ---------
-// TODO ADD SAFETY TO BOTH get_index AND get_pool SO THAT IF A BAD POINTER IS PASSED TO THEM THEY DON'T LOOP FOREVER
-// ---------
-
 // get the index of a block in the is_free list
 uint32_t get_index(void* block){
     /**
@@ -65,6 +61,10 @@ uint32_t get_index(void* block){
      * bored then I would be forever grateful if you could make this fast.
      */
 
+    if((uint8_t*)block < (uint8_t*)heap_start || (uint8_t*)block > ((uint8_t*)heap_start) + HEAP_SIZE){ // out of range
+        return -1;
+    }
+
     uint8_t* blk = (uint8_t*) block;
 
     uint32_t i = 0;
@@ -72,7 +72,7 @@ uint32_t get_index(void* block){
 
     uint32_t index = 0;
 
-    while(blk > heap_start){
+    while(blk > (uint8_t*)heap_start){
         if(pool_left <= 0){
             i++;
             pool_left = pool_counts[i];
@@ -86,12 +86,17 @@ uint32_t get_index(void* block){
 }
 
 uint32_t get_pool(void* block){
+
+    if((uint8_t*)block < (uint8_t*)heap_start || (uint8_t*)block > ((uint8_t*)heap_start) + HEAP_SIZE){ // out of range
+        return -1;
+    }
+
     uint8_t* blk = (uint8_t*) block;
 
     uint32_t i = 0;
     uint32_t pool_left = pool_counts[i];
 
-    while(blk >= heap_start){
+    while(blk >= (uint8_t*)heap_start){
         if(pool_left <= 0){
             i++;
             pool_left = pool_counts[i];
@@ -146,6 +151,8 @@ void* init_heap()
     for(int i = 0; i < IS_FREE_SIZE; i++){
         is_free[i] = 255;
     }
+
+    return heap_start;
 }
 
 

@@ -20,7 +20,7 @@ int main(){
 
     init_heap();
 
-    uint16_t* mem = alloc(NULL, 8);
+    uint16_t* mem = alloc(NULL, 17);
     printf("------------------------%i\n", isFree(NULL, mem));
 
     block_t* head = pool_heads[0];

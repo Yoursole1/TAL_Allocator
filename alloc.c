@@ -30,8 +30,10 @@ void* alloc(uint32_t size)
     void* mem = pool_allocator.super.alloc(&pool_allocator, size);
 
     if(mem == NULL){
-        return general_allocator.super.alloc(&general_allocator, size);
+        mem = general_allocator.super.alloc(&general_allocator, size);
     }
+
+    return mem;
 }
 
 

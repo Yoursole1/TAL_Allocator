@@ -1,26 +1,45 @@
-#include "stdint.h"
-#include "stdbool.h"
-#include <stddef.h>
+#include "general_allocate.c"
+#include "pool_allocate.c"
+
+#include "alloc.h"
 
 
-struct Allocator{
-    uint32_t heap_size;
-    void* heap_start;
+struct Pool_Allocator pool_allocator;
+struct General_Allocator general_allocator;
 
-    /**
-    * Tells you if the given block of memory is free
-    */
-    bool(*isFree)(void* self, void* mem);
+void init_heap(void* pool_start, void* general_start)
+{
+    pool_allocator = build_pool_allocator(pool_start);
+    general_allocator = build_general_allocator(general_start);
+}
 
-    /**
-     * Allocates a block of a given size, then returns a pointer to this block
-     * 
-     * Returns a NULL pointer if there is not enough space to allocate this block
-     */
-    void*(*alloc)(void* self, uint32_t size);
+bool isFree(void* mem)
+{
+    return 
+        pool_allocator.super.isFree(&pool_allocator, mem) || 
+        general_allocator.super.isFree(&general_allocator, mem);
+}
 
-    /**
-     * Free the block of a given pointer
-     */
-    void(*free)(void* self, void* mem);
-};
+
+void* alloc(uint32_t size)
+{
+    if(size > MAX_POOL_SIZE) {
+        return general_allocator.super.alloc(&general_allocator, size);
+    }
+
+    void* mem = pool_allocator.super.alloc(&pool_allocator, size);
+
+    if(mem == NULL){
+        return general_allocator.super.alloc(&general_allocator, size);
+    }
+}
+
+
+void free(void* mem)
+{
+    if(mem >= pool_allocator.super.heap_start && mem < pool_allocator.super.heap_start + pool_allocator.super.heap_size){
+        pool_allocator.super.free(&pool_allocator, mem);
+    }else{
+        general_allocator.super.free(&general_allocator, mem);
+    }
+}

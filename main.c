@@ -1,13 +1,13 @@
 #include <sys/mman.h>
 
 #include <stdio.h>
-#include "pool_allocate.c"
+#include "general_allocate.c"
 
 
 
 int main(){
     
-    heap_start = mmap(
+    void* heap_start = mmap(
         NULL,
         HEAP_SIZE,
         PROT_READ | PROT_WRITE,
@@ -16,18 +16,24 @@ int main(){
         0
     );
 
-    printf("heap start: %p\n", heap_start);
+    struct General_Allocator alloca = build_general_allocator(heap_start);
 
-    init_heap();
+    void* mem[30];
 
-    void* mem[32];
-
-    for(int i = 0; i < 32; i++){
-        mem[i] = alloc(NULL, 8);
+    for(int i = 0; i < 30; i++){
+        mem[i] = alloca.super.alloc(&alloca, 8);
     }
 
-    for(int i = 0; i < 32; i++){
-        printf("Pool (%i): %i\n", i, get_pool(mem[i]));
+    for(int i = 0; i < 30; i++){
+        printf("%i\n" ,alloca.super.isFree(&alloca, mem[i]));
+    }
+    printf("---------------\n");
+    for(int i = 0; i < 30; i += 2){
+        alloca.super.free(&alloca, mem[i]);
+    }
+
+    for(int i = 0; i < 30; i++){
+        printf("%i\n" ,alloca.super.isFree(&alloca, mem[i]));
     }
 
 

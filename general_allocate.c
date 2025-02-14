@@ -2,7 +2,7 @@
 #include "stdbool.h"
 #include <stddef.h>
 
-#include "alloc.h"
+#include "alloc_strategy.h"
 
 #pragma once
 
@@ -21,7 +21,7 @@ struct Block
 
 struct General_Allocator{
 
-    struct Allocator super;
+    struct Alloc_Strategy super;
     
     uint32_t heap_remaining;
     struct Block* links;
@@ -187,7 +187,7 @@ uint8_t free_indecies[HEAP_SIZE];
 struct General_Allocator build_general_allocator(void* heap_start)
 {
     
-    struct Allocator super = {
+    struct Alloc_Strategy super = {
         .heap_size = HEAP_SIZE,
         .heap_start = heap_start,
 

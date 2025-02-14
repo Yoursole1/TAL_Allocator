@@ -40,6 +40,7 @@ void* alloc(uint32_t size)
 
 void free(void* mem)
 {
+    // todo verify this <= is correct
     if(mem >= pool_allocator.super.heap_start && mem <= pool_allocator.super.heap_start + pool_allocator.super.heap_size){
         pool_allocator.super.free(&pool_allocator, mem);
     }else{

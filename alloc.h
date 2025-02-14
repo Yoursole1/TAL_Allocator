@@ -2,6 +2,14 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#pragma once
+
+
+/**
+ * Builds the two internal heaps and initializes the allocator
+ */
+void init_heap(void* pool_start, void* general_start);
+
 /**
 * Tells you if the given block of memory is free
 */

@@ -7,7 +7,7 @@
 #pragma once
 
 
-#define HEAP_SIZE 1024 // since we are allocating arrays of this size, it must be determined at compile time like this
+#define HEAP_SIZE 2048 // since we are allocating arrays of this size, it must be determined at compile time like this
 
 struct Block
 {
@@ -41,7 +41,7 @@ uint32_t findFirstFree(void* self){ // TODO optimize
     return -1; // unreachable if "heap_remaining" works properly
 }
 
-bool isFree(void* self, void* mem)
+bool general_isFree(void* self, void* mem)
 {
     struct General_Allocator this = *(struct General_Allocator*)(self);
 
@@ -62,7 +62,7 @@ bool isFree(void* self, void* mem)
     return false; // mem is not within the heap (bad call)
 }
 
-void* alloc(void* self, uint32_t size)
+void* general_alloc(void* self, uint32_t size)
 {   
     struct General_Allocator this = *((struct General_Allocator*)(self));
     
@@ -113,7 +113,7 @@ void* alloc(void* self, uint32_t size)
 }
 
 
-void free(void* self, void* mem)
+void general_free(void* self, void* mem)
 {
     struct General_Allocator this = *(struct General_Allocator*)(self);
     if(this.super.isFree(self, mem)){
@@ -191,9 +191,9 @@ struct General_Allocator build_general_allocator(void* heap_start)
         .heap_size = HEAP_SIZE,
         .heap_start = heap_start,
 
-        .isFree = &isFree,
-        .alloc = &alloc,
-        .free = &free
+        .isFree = &general_isFree,
+        .alloc = &general_alloc,
+        .free = &general_free
     };
     
     links[0] = (struct Block){

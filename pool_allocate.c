@@ -7,6 +7,7 @@
 
 #include <stdio.h>
 
+#pragma once
 
 
 
@@ -125,7 +126,7 @@ struct block_t* build_pool(void* self, void* curr, uint32_t pool_size, uint32_t 
 
 
 
-bool isFree(void* self, void* mem)
+bool pool_isFree(void* self, void* mem)
 {
     struct Pool_Allocator this = *(struct Pool_Allocator*)(self);
 
@@ -139,7 +140,7 @@ bool isFree(void* self, void* mem)
     return (this.is_free[big_index] & (1 << small_index)) != 0;
 }
 
-void* alloc(void* self, uint32_t size)
+void* pool_alloc(void* self, uint32_t size)
 {   
     struct Pool_Allocator this = *(struct Pool_Allocator*)(self);
     // find ideal i
@@ -175,7 +176,7 @@ void* alloc(void* self, uint32_t size)
 }
 
 
-void free(void* self, void* mem)
+void pool_free(void* self, void* mem)
 {
     struct Pool_Allocator this = *(struct Pool_Allocator*)(self);
 
@@ -232,9 +233,9 @@ struct Pool_Allocator build_pool_allocator(void* heap_start)
         .heap_size = HEAP_SIZE,
         .heap_start = heap_start,
 
-        .isFree = &isFree,
-        .alloc = &alloc,
-        .free = &free
+        .isFree = &pool_isFree,
+        .alloc = &pool_alloc,
+        .free = &pool_free
     };
 
 

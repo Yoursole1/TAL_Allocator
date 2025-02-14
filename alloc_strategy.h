@@ -2,6 +2,7 @@
 #include "stdbool.h"
 #include <stddef.h>
 
+#pragma once
 
 struct Alloc_Strategy{
     uint32_t heap_size;

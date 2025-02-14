@@ -2,6 +2,7 @@
 #include "pool_allocate.c"
 
 #include "alloc.h"
+#pragma once
 
 
 struct Pool_Allocator pool_allocator;
@@ -39,7 +40,7 @@ void* alloc(uint32_t size)
 
 void free(void* mem)
 {
-    if(mem >= pool_allocator.super.heap_start && mem < pool_allocator.super.heap_start + pool_allocator.super.heap_size){
+    if(mem >= pool_allocator.super.heap_start && mem <= pool_allocator.super.heap_start + pool_allocator.super.heap_size){
         pool_allocator.super.free(&pool_allocator, mem);
     }else{
         general_allocator.super.free(&general_allocator, mem);

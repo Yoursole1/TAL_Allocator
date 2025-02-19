@@ -27,13 +27,20 @@ int main(){
 
     init_heap(pool_start, general_start);
 
-    void* mem = alloc(500);
+    void* mem[50];
 
-    printf("%i\n", isFree(mem));
+    for(int i = 0; i < 50; i++){
+        mem[i] = alloc(8);
+    }
 
-    free(mem);
+    for(int i = 0; i < 50; i++){
+        free(mem[i]);
+    }
 
-    printf("%i\n", isFree(mem));
+    for(int i = 0; i < 50; i++){
+        printf("%i\n", isFree(mem[i]));
+    }
+
 
 
     return 0;

@@ -1,8 +1,9 @@
+
 #include "general_allocate.c"
 #include "pool_allocate.c"
 
 #include "alloc.h"
-#pragma once
+
 
 
 struct Pool_Allocator pool_allocator;

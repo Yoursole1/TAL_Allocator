@@ -1,10 +1,11 @@
+
 #include "stdint.h"
 #include "stdbool.h"
 #include <stddef.h>
 
 #include "alloc_strategy.h"
 
-#pragma once
+
 
 
 #define HEAP_SIZE 2048 // since we are allocating arrays of this size, it must be determined at compile time like this

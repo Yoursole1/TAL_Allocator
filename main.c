@@ -18,7 +18,10 @@ int main() {
         0
     );
 
-    init_heap();
+    uint32_t success = init_heap();
+    if (success != 1) {
+        printf("Configuration issue\n");
+    }
 
     uint8_t* mem = (uint8_t*)alloc(1);
     uint8_t* mem2 = (uint8_t*)alloc(1);

@@ -104,7 +104,7 @@ uint32_t get_index(void* block){
 
     while(blk >= (uint8_t*)HEAP_START){
         if(pool_left <= 0){
-            pool_left = POOL_SIZES[i++];
+            pool_left = POOL_SIZES[++i];
         }
 
         blk -= POOL_BLOCK_SIZES[i];
@@ -136,8 +136,7 @@ uint32_t get_pool(void* block){
 
     while(blk >= (uint8_t*)HEAP_START){
         if(pool_left <= 0){
-            i++;
-            pool_left = POOL_SIZES[i];
+            pool_left = POOL_SIZES[++i];
         }
         blk -= POOL_BLOCK_SIZES[i];
         pool_left -= 1;
@@ -149,7 +148,7 @@ uint32_t get_pool(void* block){
 
 
 /**
- * Usage: Call with given parameters, check for success or failure to make sure it was
+ * Usage: Check for success or failure when used to make sure it was
  * configured correctly
  *
  * @return 1 for success, -1 for failure
@@ -199,8 +198,7 @@ void* alloc(uint32_t size) {
     // if the pool for ideal i is already full (null head), keep going to next block until we find a free one
     struct block_t* block = pool_heads[i];
     while(block == ((void*)0) && i < NUMBER_OF_POOLS){
-        i++;
-        block = pool_heads[i];
+        block = pool_heads[++i];
     }
 
     if(block == ((void*)0)){

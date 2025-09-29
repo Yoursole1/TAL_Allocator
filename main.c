@@ -1,13 +1,15 @@
+//
+// Created by Joshua Beard on 9/27/25.
+//
+
 #include <sys/mman.h>
 
 #include <stdio.h>
+#include "alloc.c"
 
-#include "alloc.h"
 
-
-int main(){
-
-    void* pool_start = mmap(
+int main() {
+    HEAP_START = mmap( // HEAP_START variable coming from alloc.c include
         NULL,
         2048,
         PROT_READ | PROT_WRITE,
@@ -16,32 +18,17 @@ int main(){
         0
     );
 
-    void* general_start = mmap(
-        NULL,
-        2048,
-        PROT_READ | PROT_WRITE,
-        MAP_ANONYMOUS | MAP_PRIVATE,
-        -1,
-        0
-    );
+    init_heap();
 
-    init_heap(pool_start, general_start);
+    uint8_t* mem = (uint8_t*)alloc(1);
+    uint8_t* mem2 = (uint8_t*)alloc(1);
 
-    void* mem[50];
+    printf("%p\n", HEAP_START);
+    printf("%p\n", mem);
+    printf("%p\n", mem2);
 
-    for(int i = 0; i < 50; i++){
-        mem[i] = alloc(8);
-    }
-
-    for(int i = 0; i < 50; i++){
-        free(mem[i]);
-    }
-
-    for(int i = 0; i < 50; i++){
-        printf("%i\n", isFree(mem[i]));
-    }
-
-
+    printf("%i\n", get_index(mem+64));
+    printf("%i\n", get_index(mem2));
 
     return 0;
 }

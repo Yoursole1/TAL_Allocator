@@ -2,7 +2,14 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+struct alloc_result {
+ void* mem;
 
+ // 1 for pool allocation
+ // 0 for general allocation
+ // -1 for failed allocation
+ int pool;
+};
 /**
  * Builds the two internal heaps and initializes the allocator
  */
@@ -18,7 +25,7 @@ bool isFree(void* mem);
 * 
 * Returns a NULL pointer if there is not enough space to allocate this block
 */
-void* alloc(uint32_t size);
+struct alloc_result alloc(uint32_t size);
 
 /**
 * Free the block of a given pointer
